@@ -1,22 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Waiting for postgres to connect ..."
+echo "Collecting static files..."
+python3 manage.py collectstatic --noinput
 
-while ! nc -z db 5432; do
-  sleep 0.1
-done
+echo "Making migrations..."
+python3 manage.py makemigrations
 
-echo "PostgreSQL is active"
+echo "Applying migrations..."
+python3 manage.py migrate
 
-python manage.py collectstatic --noinput
-python manage.py migrate
-python manage.py makemigrations
+echo "Creating superuser..."
+python3 manage.py createsuperuser 
 
-gunicorn truck_signs_designs.wsgi:application --bind 0.0.0.0:8000
-
-
-
-echo "Postgresql migrations finished"
-
-python manage.py runserver
+echo "Starting Gunicorn WSGI server..."
+exec gunicorn truck_signs_designs.wsgi:application --bind 0.0.0.0:8000
