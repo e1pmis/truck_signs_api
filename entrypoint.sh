@@ -10,8 +10,14 @@ python3 manage.py makemigrations
 echo "Applying migrations..."
 python3 manage.py migrate
 
-echo "Creating superuser..."
-python3 manage.py createsuperuser 
+read -p "Do you want to create a superuser? (y/n): " create_admin
+
+if [[ "$create_admin" == "y" || "$create_admin" == "Y" ]]; then
+    echo "Creating superuser..."
+    python3 manage.py createsuperuser 
+else
+    echo "Skipping superuser creation."
+fi
 
 echo "Starting Gunicorn WSGI server..."
 exec gunicorn truck_signs_designs.wsgi:application --bind 0.0.0.0:8000
