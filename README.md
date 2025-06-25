@@ -11,9 +11,10 @@ Each service runs in its own container, and communication is handled via the mai
 1. [Prerequisites](#prerequisites)  
 2. [Quickstart](#quickstart)  
 3. [Usage](#usage)  
-   - 3.1 [Creating a Django Superuser](#31-creating-a-django-superuser)  
-   - 3.2 [Logging into Django Admin and Managing Products](#32-logging-into-django-admin-and-managing-products)
-   - 3.3 [External Deployment](#33-external-deployment)
+   - 3.1 [Generating a Django SECRET_KEY](#31-generating-a-django-secret_key)  
+   - 3.2 [Creating a Django Superuser](#32-creating-a-django-superuser)  
+   - 3.3 [Logging into Django Admin and Managing Products](#33-logging-into-django-admin-and-managing-products)
+   - 3.4 [External Deployment](#34-external-deployment)
 
 
 ---
@@ -25,38 +26,31 @@ Each service runs in its own container, and communication is handled via the mai
 - **Docker**  
   ```bash
   sudo apt update
-  sudo apt install -y docker postgresql
+  sudo apt install -y docker 
     ```
-- **postgresql**  
-  ```bash
-  sudo apt install -y postgresql
-    ```
-  
+
 ## Quickstart 
+Start by cloning the project repository and enter the main directory, the follow the next steps:
 
-### 1. Create PostgreSQL user and database on your local machine
+### 1. Set Up Environment Variables
 
-```bash
-sudo -i -u postgres
-psql
-```
-Inside psql, run:
+The project uses environment variables for configuration. A sample file simple_env_config.env is provided. Copy the sample file to create your own .env file:
 
 ```bash
-CREATE USER trucksigns_user WITH PASSWORD '<YOUR_DB_PASSWORD>';
-CREATE DATABASE trucksigns_db OWNER trucksigns_user;
-GRANT ALL PRIVILEGES ON DATABASE trucksigns_db TO trucksigns_user;
-\q
-exit
+cp simple_env_config.env .env
 ```
+then open the .env file and update any variables as needed, such as database credentials or your Django SECRET_KEY.
+
+💡 If you don’t have a SECRET_KEY, see section [3.1 Generating a Django SECRET_KEY](#31-generating-a-django-secret_key) for instructions on how to create one securely.
+
+🔧 In this setup, the database host should be set to the Docker host IP (172.17.0.1), which is accessible from containers by default.
+
 ### 2. Start PostgreSQL Container
 
 ```bash
 docker run -d \
   --name trucksigns_db \
-  -e POSTGRES_USER=trucksigns_user \
-  -e POSTGRES_PASSWORD=<YOUR_DB_PASSWORD> \
-  -e POSTGRES_DB=trucksigns_db \
+  --env-file .env \
   -p 5433:5432 \
   postgres:15
 ```
@@ -75,9 +69,23 @@ docker run -it  --restart=on-failure -p 8020:8000 trucksigns_app:latest
 
 After Step 4,the Truck Sign Shop application will be running inside a Docker container and accessible on the port 8020 of the host machine and the container will restart once an error accured.
 
+
+
 ## Usage
 
-### 3.1 Django Superuser Creation on Container Start
+### 3.1 Generating a Django SECRET_KEY
+
+A secure SECRET_KEY is essential for the security of your Django application. You can generate one using Python directly from your terminal.
+
+Run the following command:
+
+```bash
+python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+```
+
+This will output a secure, random string you can use as your SECRET_KEY.
+
+### 3.2 Django Superuser Creation on Container Start
 
 Upon starting the Django application container, a prompt will appear requesting the following details for superuser creation:
 
@@ -89,7 +97,7 @@ Upon starting the Django application container, a prompt will appear requesting 
 
 The container should be run as indicated in the Quickstart section, and the prompts in the container’s terminal should be followed to complete the admin user setup.
 
-### 3.2 Logging into Django Admin and Managing Products
+### 3.3 Logging into Django Admin and Managing Products
 
 you can log in and start managing the shop.
 
@@ -109,11 +117,11 @@ http://localhost:8020/admin
 
 * Edit or delete existing items
 
-### 3.3 External Deployment
+### 3.4 External Deployment
 
 To publish the server externally, you need to configure Django to allow requests from your external IP address or domain.
 
-Open your [settings.py](settings.py) file and find the ALLOWED_HOSTS setting. Add your server's IP address or domain name:
+Open your [base.py](truck_signs_designs/settings/base.py) file and find the ALLOWED_HOSTS setting. Add your server's IP address or domain name:
 
 ```python
 ALLOWED_HOSTS = ['your.server.ip.address', 'localhost']
