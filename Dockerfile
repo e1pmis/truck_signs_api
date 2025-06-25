@@ -23,4 +23,4 @@ COPY . ${WORKDIR}
 EXPOSE 8000
 
 # Run migrations and then start the development server
-CMD ./entrypoint.sh
+CMD ["./entrypoint.sh"]
