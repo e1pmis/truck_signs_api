@@ -30,22 +30,36 @@ Each service runs in its own container, and communication is handled via the mai
     ```
 
 ## Quickstart 
-Start by cloning the project repository and enter the main directory, the follow the next steps:
 
-### 1. Set Up Environment Variables
+### 1. Clone the Repository and Enter the Project Directory
+
+Start by cloning the project repository and enter the main directory: 
+
+```bash
+git clone <REPO_URL>
+cd truck_signs_api
+```
+
+### 2. Set Up Environment Variables
 
 The project uses environment variables for configuration. A sample file simple_env_config.env is provided. Copy the sample file to create your own .env file:
 
 ```bash
-cp simple_env_config.env .env
+cp truck_signs_designs/settings/simple_env_config.env truck_signs_designs/settings/.env
 ```
 then open the .env file and update any variables as needed, such as database credentials or your Django SECRET_KEY.
 
 💡 If you don’t have a SECRET_KEY, see section [3.1 Generating a Django SECRET_KEY](#31-generating-a-django-secret_key) for instructions on how to create one securely.
 
-🔧 In this setup, the database host should be set to the Docker host IP (172.17.0.1), which is accessible from containers by default.
+### 3. Network configutration
 
-### 2. Start PostgreSQL Container
+In this setup, the database host should be set to the Docker host IP address 172.17.0.1. This IP belongs to the default Docker bridge network interface (docker0) and is accessible from containers by default.
+
+On Linux, Docker automatically creates the docker0 network when you install Docker. You do not need to create it manually.
+
+If you run your containers on the default bridge network, your Django container can reach services running on the host (like PostgreSQL) via 172.17.0.1.
+
+### 4. Start PostgreSQL Container
 
 ```bash
 docker run -d \
@@ -56,12 +70,12 @@ docker run -d \
 ```
 This exposes PostgreSQL on port 5433 of the host machine.
 
-### 3. Build the Application Image
+### 5. Build the Application Image
 
 ```bash
 docker build -t trucksigns_app:latest .
 ```
-### 4. Run the Application Container
+### 6. Run the Application Container
 
 ```bash
 docker run -it  --restart=on-failure -p 8020:8000 trucksigns_app:latest
