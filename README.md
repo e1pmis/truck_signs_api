@@ -104,7 +104,7 @@ you can log in and start managing the shop.
 1. Open your browser and go to:
 
 ```bash
-http://localhost:8020/admin
+http://<your_ip>:8020/admin
 ```
 
 2. Log in using the superuser credentials you just created.
