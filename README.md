@@ -36,7 +36,7 @@ Each service runs in its own container, and communication is handled via the mai
 Start by cloning the project repository and enter the main directory: 
 
 ```bash
-git clone <REPO_URL>
+git clone https://github.com/e1pmiS/truck_signs_api.git
 cd truck_signs_api
 ```
 
@@ -64,7 +64,8 @@ If you run your containers on the default bridge network, your Django container 
 ```bash
 docker run -d \
   --name trucksigns_db \
-  --env-file .env \
+  --network ts_net \
+  --env-file truck_signs_designs/settings/.env \
   -p 5433:5432 \
   postgres:15
 ```
@@ -78,7 +79,7 @@ docker build -t trucksigns_app:latest .
 ### 6. Run the Application Container
 
 ```bash
-docker run -it  --restart=on-failure -p 8020:8000 trucksigns_app:latest
+docker run -it --network ts_net --restart=on-failure -p 8020:8000 trucksigns_app:latest
 ```
 
 After Step 4,the Truck Sign Shop application will be running inside a Docker container and accessible on the port 8020 of the host machine and the container will restart once an error accured.
