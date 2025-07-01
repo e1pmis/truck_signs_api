@@ -41,7 +41,7 @@ cd truck_signs_api
 ```
 ### 2. Network configutration
 
-Create a custom Docker network called 2ts_net" or other name to enable communication between your containers:
+Create a custom Docker network called "ts_net" or other name to enable communication between your containers:
 
 ```bash
 docker network create ts_net
