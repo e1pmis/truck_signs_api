@@ -41,13 +41,13 @@ cd truck_signs_api
 ```
 ### 2. Network configutration
 
-Create a custom Docker network called ts_net to enable communication between your containers:
+Create a custom Docker network called 2ts_net" or other name to enable communication between your containers:
 
 ```bash
 docker network create ts_net
 ```
 
-When running your containers, attach them to this network using the --network ts_net option. Containers on the same network can communicate with each other using their container names as hostnames.
+When running your containers, attach them to this network using the --network option. Containers on the same network can communicate with each other using their container names as hostnames.
 
 ### 3. Set Up Environment Variables
 
