@@ -138,6 +138,6 @@ To publish the server externally, you need to configure Django to allow requests
 Open your [base.py](truck_signs_designs/settings/base.py) file and find the ALLOWED_HOSTS setting. Add your server's IP address or domain name:
 
 ```python
-ALLOWED_HOSTS = ['your.server.ip.address', 'localhost']
+ALLOWED_HOSTS = [<your_server_ip_address>, 'localhost']
 ```
 
