@@ -39,8 +39,17 @@ Start by cloning the project repository and enter the main directory:
 git clone https://github.com/e1pmiS/truck_signs_api.git
 cd truck_signs_api
 ```
+### 2. Network configutration
 
-### 2. Set Up Environment Variables
+Create a custom Docker network called ts_net to enable communication between your containers:
+
+```bash
+docker network create ts_net
+```
+
+When running your containers, attach them to this network using the --network ts_net option. Containers on the same network can communicate with each other using their container names as hostnames.
+
+### 3. Set Up Environment Variables
 
 The project uses environment variables for configuration. A sample file simple_env_config.env is provided. Copy the sample file to create your own .env file:
 
@@ -51,13 +60,6 @@ then open the .env file and update any variables as needed, such as database cre
 
 💡 If you don’t have a SECRET_KEY, see section [3.1 Generating a Django SECRET_KEY](#31-generating-a-django-secret_key) for instructions on how to create one securely.
 
-### 3. Network configutration
-
-In this setup, the database host should be set to the Docker host IP address 172.17.0.1. This IP belongs to the default Docker bridge network interface (docker0) and is accessible from containers by default.
-
-On Linux, Docker automatically creates the docker0 network when you install Docker. You do not need to create it manually.
-
-If you run your containers on the default bridge network, your Django container can reach services running on the host (like PostgreSQL) via 172.17.0.1.
 
 ### 4. Start PostgreSQL Container
 
