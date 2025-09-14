@@ -2,7 +2,7 @@
 
 This guide explains how to containerize the Truck Sign Shop application and run it alongside a PostgreSQL database using Docker only.
 
-Each service runs in its own container, and communication is handled via the main Docker network.
+Each service runs in its own container, and communication is handled via a cutom Docker network.
 
 ---
 
